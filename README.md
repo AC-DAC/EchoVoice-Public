@@ -117,7 +117,7 @@ Aika started as one take from Qwen's voice design model. Turning that into a lon
 
 - **Brightness boosts failed.** Every version with added high frequencies was rejected (0 of 18 in one set; notes: "fuzz and air"), and a long listen to the brightest one caused fatigue. A cloned voice has little harmonic content up top, so EQ lifts hiss rather than clarity.
 - **Pitch lowering failed too.** Resampling a take down 1–1.5 semitones before cloning was rejected on every line (0/12): it shifts the voice's resonances as well, and sounds processed.
-- **A nasal midrange worked.** It beat the plain version 5/6 to 0/6 in the same blind set.
+- **A nasal midrange worked.** Adding it took the same takes from 0/6 to 5/6 in one blind set.
 - **Then a dials page.** A local page with live controls: a 10-band graphic EQ with a response curve, movable nasal, bass and air bands, saturation, a split-band de-esser and compression run live in the browser (Web Audio); resonance and pitch swap pre-rendered takes; pace is rendered on demand. Settings are saved by name and converted to the same filter chain offline, then confirmed by ear before they're locked.
 
 ---
@@ -157,7 +157,7 @@ The assistant front-end is a Claude Code hook: each reply is summarised and spok
 - **A paid cloud TTS service** — per-character cost, and text and audio leave the machine. The Mac was already there.
 - **A live TTS service for Lingus** — would only work while the Mac is awake. Pre-rendered static clips work everywhere.
 - **Docker** — no Metal GPU access inside Docker on macOS.
-- **Slowing audio with ffmpeg** — 0.8× time-stretching smeared consonants. Speed has to come from the model.
+- **Slowing audio a lot with ffmpeg** — 0.8× time-stretching smeared consonants. Small changes are fine (Aika reads at 0.95×); bigger ones have to come from the model.
 - **Inline markup for emphasis and pauses** — Qwen3-TTS has no word-level controls; tags like `[pause]` were read aloud or garbled.
 - **High-frequency boosts for brightness** — rejected as fuzz on a cloned voice (0/18); a nasal midrange did the job instead.
 - **Resampling to lower a voice's pitch** — moves the resonances too; 0/12 in a blind set.
