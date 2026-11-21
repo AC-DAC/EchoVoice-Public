@@ -98,6 +98,8 @@ Each take is transcribed and compared to its text, then checked for voice and au
 
 ## Voices
 
+https://github.com/user-attachments/assets/4f4eb768-b2ce-4cdc-859a-20235a1dbd5d
+
 | Voice | What |
 |---|---|
 | **Seolyeong (Ko)** · `seolyeong` | Seol-yeong (설영). Korean, female. Fine-tuned from Qwen's stock sohee speaker on takes approved by ear. Lingus's voice. |
