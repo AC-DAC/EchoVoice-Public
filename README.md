@@ -100,12 +100,25 @@ Each take is transcribed and compared to its text, then checked for voice and au
 
 | Voice | What |
 |---|---|
-| `seolyeong` | Seol-yeong (설영). Korean, female. Fine-tuned from Qwen's stock sohee speaker on takes approved by ear. Lingus's voice. |
-| `eggy` | English, bright and bubbly. The desktop assistant's voice. Designed from a written description with Qwen's voice design model, picked by ear, then locked by cloning its own approved take so it stays the same voice. |
-| `eggy-ko` | The same voice speaking Korean: a cross-lingual clone from the English reference. |
-| `sohee-calm` | Stock sohee with tuned sampling. The control in blind tests and the base for fine-tuning. |
+| **Seolyeong (Ko)** · `seolyeong` | Seol-yeong (설영). Korean, female. Fine-tuned from Qwen's stock sohee speaker on takes approved by ear. Lingus's voice. |
+| **Seolyeong (En)** · `seolyeong-en` | Seolyeong speaking English with her Korean accent kept. The same fine-tuned weights asked for English beat a cross-lingual clone of her Korean clips (12/18 vs 7/18 kept, blind). A soft, slightly shy style was picked over three alternatives; an American-English variant was tried and dropped. |
+| **Aika (En)** · `aika` | English, a long-form reading voice. Designed from a written description with Qwen's voice design model, locked by cloning the picked take, then shaped by ear: slightly lighter resonance, a nasal midrange, a trimmed low end and a touch slower. See [Shaping a voice by ear](#shaping-a-voice-by-ear). |
+| **Eggy (En)** · `eggy` | Bright and bubbly. The desktop assistant's voice. Designed from a written description, picked by ear, then locked by cloning its own approved take so it stays the same voice. |
+| **Eggy (Ko)** · `eggy-ko` | The same voice speaking Korean: a cross-lingual clone from the English reference. |
+| **Sohee (Ko)** · `sohee-calm` | Stock sohee with tuned sampling. The control in blind tests and the base for fine-tuning. |
 
-A voice is a small preset file (plus a reference clip for clones, or weights for a fine-tune), so adding one doesn't touch the engine.
+A voice is a small preset file (plus a reference clip for clones, or weights for a fine-tune), so adding one doesn't touch the engine. Each has a display name for the studio; the ID stays what code and other projects use. A preset can also carry its own processing (a resonance shift and an audio filter chain), applied to every take before the judge, so calibration scores exactly what ships. Every voice is calibrated by ear.
+
+---
+
+## Shaping a voice by ear
+
+Aika started as one take from Qwen's voice design model. Turning that into a long-form reading voice took about ten blind rounds and a live tuning page.
+
+- **Brightness boosts failed.** Every version with added high frequencies was rejected (0 of 18 in one set; notes: "fuzz and air"), and a long listen to the brightest one caused fatigue. A cloned voice has little harmonic content up top, so EQ lifts hiss rather than clarity.
+- **Pitch lowering failed too.** Resampling a take down 1–1.5 semitones before cloning was rejected on every line (0/12): it shifts the voice's resonances as well, and sounds processed.
+- **A nasal midrange worked.** It beat the plain version 5/6 to 0/6 in the same blind set.
+- **Then a dials page.** A local page with live controls: a 10-band graphic EQ with a response curve, movable nasal, bass and air bands, saturation, a split-band de-esser and compression run live in the browser (Web Audio); resonance and pitch swap pre-rendered takes; pace is rendered on demand. Settings are saved by name and converted to the same filter chain offline, then confirmed by ear before they're locked.
 
 ---
 
@@ -116,7 +129,7 @@ A local web app for everything that isn't Lingus.
 - **Create.** Type a line, or upload a PDF, .txt or .md file. Documents are split into headings and paragraphs and narrated into section mp3s plus one full file.
 - **Library.** Play finished narrations with bookmarks, listened ticks, a sleep timer and per-chapter summaries written by a local LLM (Gemma 4 12B through Ollama).
 - **Flagged lines.** Flagged lines are listed with why they failed. **Give me 3 takes** renders three fresh versions beside the current one; keeping one logs the chosen and rejected audio as training pairs for the next fine-tune.
-- **Voices.** Hear a sample of each voice.
+- **Voices.** Hear a sample of each voice, listed by display name.
 
 The assistant front-end is a Claude Code hook: each reply is summarised and spoken in `eggy`'s voice through the studio's HTTP API.
 
@@ -130,6 +143,10 @@ The assistant front-end is a Claude Code hook: each reply is summarised and spok
 
 **Streaming playback.** Seeking in a 1.3 GB mp3 made the studio read the whole requested range into memory before sending it, and players ask for "the rest of the file" then hang up. It now streams 1 MB at a time and treats a hang-up as normal: five seeks went from +2.8 GB to flat.
 
+**Calibration that matches what ships.** Calibration takes were first rendered whole, with the default trim, while real renders split a line into sentences and trim each voice its own way. For one voice that meant calibration takes that dropped second sentences, and thresholds set on audio it never ships. Calibration now renders exactly like production.
+
+**Calibrating a clone without changing it.** For a cloned voice the reference clip is the source it clones from, and calibration takes already carry the voice's processing. Making a calibration take the new reference would have applied that processing twice. For clones, the chosen take becomes the judge's comparison clip and the source stays put.
+
 **Clipped first words.** Voice activity detection at its default threshold heard the assistant voice's first word late, so the trim cut it. Each voice now carries its own detection threshold, used by both the trim and the judge's silence check.
 
 ---
@@ -142,6 +159,9 @@ The assistant front-end is a Claude Code hook: each reply is summarised and spok
 - **Docker** — no Metal GPU access inside Docker on macOS.
 - **Slowing audio with ffmpeg** — 0.8× time-stretching smeared consonants. Speed has to come from the model.
 - **Inline markup for emphasis and pauses** — Qwen3-TTS has no word-level controls; tags like `[pause]` were read aloud or garbled.
+- **High-frequency boosts for brightness** — rejected as fuzz on a cloned voice (0/18); a nasal midrange did the job instead.
+- **Resampling to lower a voice's pitch** — moves the resonances too; 0/12 in a blind set.
+- **Cross-lingual clones for an accented Korean voice** — came out as a "robotic foreigner" (2–3 of 6 kept); parked.
 - **The 0.6B model for the assistant voice** — near parity in a blind test (6/8 vs 7/8 for 1.7B) but slower per line because of more re-rolls. Kept 1.7B.
 
 ---
