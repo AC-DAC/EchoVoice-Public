@@ -100,7 +100,7 @@ Each take is transcribed and compared to its text, then checked for voice and au
 
 | Voice | What |
 |---|---|
-| `sohee-ft` | Korean, female. Qwen's stock sohee fine-tuned on approved takes. Lingus's voice. |
+| `seolyeong` | Seol-yeong (설영). Korean, female. Fine-tuned from Qwen's stock sohee speaker on takes approved by ear. Lingus's voice. |
 | `eggy` | English, bright and bubbly. The desktop assistant's voice. Designed from a written description with Qwen's voice design model, picked by ear, then locked by cloning its own approved take so it stays the same voice. |
 | `eggy-ko` | The same voice speaking Korean: a cross-lingual clone from the English reference. |
 | `sohee-calm` | Stock sohee with tuned sampling. The control in blind tests and the base for fine-tuning. |
