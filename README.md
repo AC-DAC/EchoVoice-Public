@@ -126,10 +126,14 @@ Aika started as one take from Qwen's voice design model. Turning that into a lon
 
 The studio's biggest job: turning documents into audiobooks, end to end on the Mac.
 
+![Read view with the Summary tab: chapter text on the left, the local model's chapter summary and lessons (each linked to its lines) on the right. Mockup: Pride and Prejudice, chapters 1–2 (public domain), read by Aika.](assets/screenshots/audiobook-read-summary.png)
+
 - **In:** a PDF, .txt or .md. PDFs are read by layout, not tags: the body font is the size carrying the most text, headings are clearly larger or short all-bold blocks. Page numbers, running headers and footers, and contents pages are always dropped; footnotes, the reference list, appendices, tables, captions and citations (a year in brackets, [12]-style numbers, URLs) can be. The text that will be read is shown, and editable, before anything renders.
 - **Spoken form:** "p. 42" becomes "page 42", years and numbers are read as words, units, fractions and URLs are spelled out the way a person would say them. Render-only respellings fix what the model mispronounces without changing the text you see.
 - **Rendered like everything else:** every line goes through best-of-N and the judge; long paragraphs split at clause boundaries; a stopped job resumes where it left off; flagged lines are listed, never hidden. Out comes one mp3 per chapter and one for the whole document.
 - **Read along:** the Read view shows the chapter as a page of text, with the paragraph and the word being spoken highlighted (word timings from Whisper).
+![Read view with Contents: chapters with lengths, listened ticks and resume points.](assets/screenshots/audiobook-read-contents.png)
+
 - **The player:** a waveform seek bar drawn from the real audio, ±15 s, chapter skip, 0.25–2× with pitch kept, a sleep timer and media keys. Highlights, bookmarks and notes are anchored to the text; chapters tick off as they're finished; one reading position per audiobook is kept across devices.
 - **Summaries:** each chapter gets its key lessons written by a local LLM (Gemma 4 12B through Ollama), so an audiobook can be revisited without replaying it.
 - **Scale:** the longest so far was 6,857 lines, about 32.7 hours of audio. That's where the engineering notes below come from: the memory "leak", the 42 GB join and the streaming fix were all found narrating it.
