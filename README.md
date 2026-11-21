@@ -126,10 +126,14 @@ Aika started as one take from Qwen's voice design model. Turning that into a lon
 
 A local web app for everything that isn't Lingus.
 
+![Studio — Voices page: each voice by display name with a sample, speed and default quality](assets/screenshots/studio-voices.png)
+
 - **Create.** Type a line, or upload a PDF, .txt or .md file. Documents are split into headings and paragraphs and narrated into section mp3s plus one full file.
 - **Library.** Play finished narrations with bookmarks, listened ticks, a sleep timer and per-chapter summaries written by a local LLM (Gemma 4 12B through Ollama).
 - **Flagged lines.** Flagged lines are listed with why they failed. **Give me 3 takes** renders three fresh versions beside the current one; keeping one logs the chosen and rejected audio as training pairs for the next fine-tune.
 - **Voices.** Hear a sample of each voice, listed by display name.
+
+![Studio — Create: type a line or upload a document, pick a voice and quality](assets/screenshots/studio-create.png)
 
 The assistant front-end is a Claude Code hook: each reply is summarised and spoken in `eggy`'s voice through the studio's HTTP API.
 
