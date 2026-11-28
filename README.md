@@ -173,6 +173,10 @@ The assistant front-end is a Claude Code hook: each reply is summarised and spok
 
 **Calibrating a clone without changing it.** For a cloned voice the reference clip is the source it clones from, and calibration takes already carry the voice's processing. Making a calibration take the new reference would have applied that processing twice. For clones, the chosen take becomes the judge's comparison clip and the source stays put.
 
+**A rename that re-rendered a checked narration.** Adding one chapter to a Korean edition re-rendered all 668 lines overnight (7 h 20 min) when only 155 were new. A clip's key hashes the model version, voice, style, speed and text. Three days earlier a voice had been renamed, and the migration rewrote each manifest's `voice` field but not the keys, so every existing clip sat under a key nothing would look up. The renderer said "668 lines to render" and nothing compared that with the 155 expected. It replaced 513 lines that had already passed a meaning check and been approved with unchecked takes, and the new takes were worse (8 failed lines against 1). Nothing was lost, because a render never deletes a take: 500 old takes were restored under the new keys, and the 8 lines already re-judged by ear that morning were kept, since a by-ear decision is newer than the checked take. The same fault was found waiting in Lingus's 347-clip set and re-keyed before it fired.
+
+The fix is a guard rather than a reminder. Before loading a model, `render` and `narrate` look for lines with no clip under their key but one under another key with the same text, speed and voice, and refuse with the count. A speed-only change is refused too, because one edit on the Voices page would otherwise re-render a whole set. A `rekey` command points the new keys at the clips that exist (with backups), and an explicit override renders anyway. Replayed on the incident, the guard refuses 508 lines; run on every current folder, it finds nothing. Lessons: a rename that keeps the name inside a hash is a data migration, not a find-and-replace; a render that touches more than expected should stop and say so; and when a count disagrees with the record, find out why before acting on the lines.
+
 **Clipped first words.** Voice activity detection at its default threshold heard the assistant voice's first word late, so the trim cut it. Each voice now carries its own detection threshold, used by both the trim and the judge's silence check.
 
 ---
@@ -196,6 +200,7 @@ The assistant front-end is a Claude Code hook: each reply is summarised and spok
 
 - Rendering and judging run on the Mac: no cloud TTS, and document text and audio stay on the machine.
 - The render worker binds to localhost and accepts requests only from the studio.
+- The studio has one admin, the Mac itself (loopback). It can optionally serve HTTPS to the home network as listen-only: listeners can play and read, and every change is refused (403). It has no public DNS record, so it can't be reached from outside the home network.
 - Model weights, renders and uploaded documents are gitignored; tests use neutral examples, never the content of a real document.
 - Pre-commit hooks scan every commit for secrets and private terms before it leaves the Mac.
 
